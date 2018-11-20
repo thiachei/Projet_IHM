@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {CabinetMedicalService} from '../cabinet-medical.service';
 
 @Component({
   selector: 'app-secretary',
@@ -7,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SecretaryComponent implements OnInit {
 
-  constructor() { }
+  constructor(private CMS: CabinetMedicalService) {
+  }
 
   ngOnInit() {
   }
