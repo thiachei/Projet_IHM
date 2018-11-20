@@ -9,6 +9,9 @@ import {CabinetMedicalService} from '../cabinet-medical.service';
 export class SecretaryComponent implements OnInit {
 
   constructor(private CMS: CabinetMedicalService) {
+
+    CMS.getData( "/data/cabinetInfirmier.xml");
+
   }
 
   ngOnInit() {
