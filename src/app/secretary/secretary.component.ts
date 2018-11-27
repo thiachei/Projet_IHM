@@ -10,7 +10,7 @@ export class SecretaryComponent implements OnInit {
 
   constructor(private CMS: CabinetMedicalService) {
 
-    CMS.getData( "/data/cabinetInfirmier.xml");
+    //CMS.getData( "/data/cabinetInfirmier.xml");
 
   }
 

@@ -5,7 +5,6 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import { CabinetInterface } from './dataInterfaces/cabinet';
 import { PatientInterface } from './dataInterfaces/patient';
 import { sexeEnum } from './dataInterfaces/sexe';
-import {url} from "inspector";
 
 @Injectable()
 
@@ -17,7 +16,7 @@ export class CabinetMedicalService {
   constructor(private http: HttpClient) {
   }
 
-
+/*
   async getCabinet(url: string): Promise<any> {
     //get HTTP response as text
     const response = await this.http.get(url, {responseType: 'text'}).toPromise();
@@ -50,7 +49,7 @@ export class CabinetMedicalService {
 
 
   }
-
+*/
   async getAll(){
       try {
           let res = await this.http.get(this.serverUrl, {observe: 'response', responseType: 'text'}).toPromise();

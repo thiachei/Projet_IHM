@@ -11,12 +11,13 @@ import { Page_accueilComponent} from "./page_accueil/page_accueil.component";
 import {CabinetMedicalService} from "./cabinet-medical.service";
 import {Page_infirmierComponent} from "./page_infirmier/page_infirmier.component";
 import {Page_patientComponent} from "./page_patient/page_patient.component";
+import EntryComponent from "./entry/entry.component";
 
 
 const appRoutes: Routes = [
     {path: '', component: Page_accueilComponent},
-    {path: 'infirmier/:id', component: Page_accueilComponent},
-    {path: 'patient/:id', component: Page_accueilComponent}
+    {path: 'infirmier/:id', component: Page_infirmierComponent},
+    {path: 'patient/:id', component: Page_patientComponent}
 ];
 
 @NgModule({
@@ -24,7 +25,8 @@ const appRoutes: Routes = [
       SecretaryComponent,
       Page_accueilComponent,
       Page_infirmierComponent,
-      Page_patientComponent
+      Page_patientComponent,
+      EntryComponent
   ],
   imports: [
       BrowserModule,
@@ -34,6 +36,6 @@ const appRoutes: Routes = [
       RouterModule.forRoot(appRoutes)
   ],
   providers: [CabinetMedicalService],
-  bootstrap: [Page_accueilComponent]
+  bootstrap: [EntryComponent]
 })
 export class AppModule { }

@@ -10,6 +10,6 @@ import {CabinetMedicalService} from "../cabinet-medical.service";
 
 export class Page_infirmierComponent {
     constructor(private cabinetMedicalService:CabinetMedicalService){
-
+        console.log("infirmier component");
     }
 }

@@ -1,0 +1,48 @@
+#barre_recherche{
+    display: block;
+    position: relative;
+    border-radius: 5px;
+    border: solid 1px dimgrey;
+    width: 70%;
+    height: 2.5em;
+    margin: auto;
+}
+#accueil-component{
+    position: relative;
+}
+#label_barre_recherche{
+    display: block;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2em;
+}
+#my-table{
+    width: 60%;
+    border: 1px solid dimgrey ;
+    max-height: 900px;
+    overflow: auto;
+    margin: auto;
+    text-align: center;
+}
+#my-table th{
+    background-color: grey;
+    padding: 8px;
+}
+#my-table td{
+    padding: 8px;
+}
+#my-table tr{
+}
+#my-table tr:hover{
+    cursor: pointer;
+    background-color: dimgrey !important;
+}
+#my-table tr:nth-child(even) {
+    background-color: #eee;
+}
+#my-table tr:nth-child(odd) {
+    background-color: #fff;
+}
+#my-table tbody{
+    width: 100%;
+}

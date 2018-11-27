@@ -1,30 +1,23 @@
-<div class="container-fluid">
-    page accueil html
-    <div class="form-group col">
-        <label for="barre_recherche">chercher une personne : </label>
-        <input id="barre_recherche" class="form-control" type="text" list="list_movies" placeholder="ex: john" [(ngModel)]="inputRecherche" (change)="recherchePersonnes()">
-        <datalist id="list_movies">
-            <option ></option>
-        </datalist>
-    </div>
-    <hr>
-    <div class="table-wrapper my-boxes" >
-        <table class="table my-table table-hover">
-            <thead>
-            <tr>
-                <td>Status</td>
-                <td>Prenom</td>
-                <td>Nom</td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngIf="contenuTable.length==0"><td colspan="3">Personne dans la liste</td></tr>
-            <tr *ngFor="let unePersonne of contenuTable" (click)="goTo(unePersonne)" >
-                <td>{{unePersonne.status}}</td>
-                <td>{{unePersonne.prenom}}</td>
-                <td>{{unePersonne.nom}}</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div id="accueil-component" class="">
+    <div class="" id="label_barre_recherche">Chercher une personne : </div>
+    <input id="barre_recherche" class="" type="text" list="list_historique" placeholder=" ex: john" [(ngModel)]="inputRecherche" (change)="recherchePersonnes()">
+    <datalist id="list_historique">
+        <option ></option>
+    </datalist>
 </div>
+<hr>
+<table id="my-table">
+    <tbody>
+    <tr>
+        <th (click)="trierPar('status')">Status</th>
+        <th (click)="trierPar('prenom')">Prenom</th>
+        <th (click)="trierPar('nom')">Nom</th>
+    </tr>
+    <tr *ngIf="contenuTable.length==0"><td colspan="3">Personne dans la liste</td></tr>
+    <tr *ngFor="let unePersonne of contenuTable" [routerLink]="unePersonne.route">
+        <td>{{unePersonne.status}}</td>
+        <td>{{unePersonne.prenom}}</td>
+        <td>{{unePersonne.nom}}</td>
+    </tr>
+    </tbody>
+</table>

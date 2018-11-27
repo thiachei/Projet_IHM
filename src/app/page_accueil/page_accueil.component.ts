@@ -4,7 +4,7 @@ import {InfirmierInterface} from "../dataInterfaces/infirmier";
 import {PatientInterface} from "../dataInterfaces/patient";
 
 @Component({
-    //moduleId: module.id,
+    moduleId: module.id,
     selector: 'page-accueil',
     templateUrl: 'page_accueil.component.html',
     styleUrls: ['page_accueil.component.css']
@@ -25,11 +25,13 @@ export class Page_accueilComponent {
             this.infirmiers = data.infirmiers;
             this.patients = data.patients;
             let tempInfirmiers = this.infirmiers.map(unInfirmier=> {
-                unInfirmier["status"] = "Infirmier";
+                unInfirmier["status"] = 'Infirmier';
+                unInfirmier["route"] = ["/infirmier",unInfirmier.id];
                 return unInfirmier;
             } );
             let tempPatients = this.patients.map(unPatient=> {
                 unPatient["status"] = "Patient";
+                unPatient["route"] = ["/patient", unPatient.numeroSecuriteSociale];
                 return unPatient;
             } );
             this.contenuTableEntier = tempInfirmiers.concat(<any[]>tempPatients);
@@ -46,5 +48,10 @@ export class Page_accueilComponent {
 
     goTo(unePersonne: any) {
         console.log("redirect to "+unePersonne.prenom);
+        //this.router
+    }
+
+    trierPar(colone: string) {
+        this.contenuTable.sort((a,b) => a[colone].localeCompare(b[colone]));
     }
 }
