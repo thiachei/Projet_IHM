@@ -3,7 +3,7 @@ import {Adresse} from "./adresse";
 
 export interface InfirmierInterface {
  id: string;
- prénom: string;
+ prenom: string;
  nom: string;
  photo: string;
  patients: PatientInterface[];
