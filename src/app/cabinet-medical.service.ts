@@ -50,10 +50,11 @@ export class CabinetMedicalService {
 
   }
 */
+
   async getAll(){
       try {
           let res = await this.http.get(this.serverUrl, {observe: 'response', responseType: 'text'}).toPromise();
-          //console.log(res);
+          //console.log("resolving promise");
           if(res.status === 200){
                   let responseObj = { infirmiers:[], patients:[], nom : "", adresse: {} };
                   const parser = new DOMParser();
@@ -71,7 +72,6 @@ export class CabinetMedicalService {
           console.error('ERROR in getAll', err);
           return [];
       }
-
   }
 
   private parseInfirmiers(doc:Document):InfirmierInterface[]{
@@ -92,27 +92,35 @@ export class CabinetMedicalService {
       return patientXML.map( I => ({
           prenom  : I.querySelector("prénom").textContent,
           nom     : I.querySelector("nom").textContent,
-          sexe    : I.querySelector("sexe").textContent,
+          sexe    : sexeEnum[I.querySelector("sexe").textContent],
           numeroSecuriteSociale : I.querySelector("numéro").textContent,
           naissance: I.querySelector("naissance").textContent,
-          adresse : this.parseAdresse(I),
-          patients: []
+          adresse : this.parseAdresse(I)
       }) );
   }
 
   private parseAdresse(document:Document):Adresse {
       const nodeXML =  document.querySelector( "adresse" ) ; //transformer la NodeList en tableau pour le map
       if (nodeXML === null){
-          return <Adresse>{ville:"NC",rue:"NC",numero:"NC",etage:"NC",codePostal:0 };
+          return <Adresse>{ville:"NC",rue:"NC",numero:"NC",etage:"NC",codePostal:0, toString:"" };
       }else{
           let tempNode;
-          return <Adresse>{
+          var monAdresse = <Adresse>{
               ville: (tempNode = nodeXML.querySelector("ville"))===null?"NC":tempNode.textContent,
               codePostal: parseInt((tempNode = nodeXML.querySelector("codePostal"))===null?"0":tempNode.textContent),
               rue: (tempNode = nodeXML.querySelector("rue"))===null?"NC":tempNode.textContent,
               numero: (tempNode = nodeXML.querySelector("numéro"))===null?"NC":tempNode.textContent,
-              etage: (tempNode = nodeXML.querySelector("étage"))===null?"NC":tempNode.textContent
+              etage: (tempNode = nodeXML.querySelector("étage"))===null?"NC":tempNode.textContent,
+              toString: ""
+                  //numero+rue+ etage.localCompare("NC")!=0?"(etage)"+etage:""+codePostale+ville
           };
+          monAdresse.toString = "".concat(
+              monAdresse.numero," ",
+              monAdresse.rue," ",
+              monAdresse.etage.localeCompare("NC")!==0?"(étage "+monAdresse.etage+") ":" ",
+              monAdresse.codePostal.toString()," ",
+              monAdresse.ville);
+          return monAdresse;
       }
   }
 

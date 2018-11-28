@@ -1,8 +1,9 @@
 export interface Adresse {
- ville: string;
- codePostal: number;
- rue: string;
- numero: string;
- etage: string;
+    ville: string;
+    codePostal: number;
+    rue: string;
+    numero: string;
+    etage: string;
+    toString: string;
 }
 
