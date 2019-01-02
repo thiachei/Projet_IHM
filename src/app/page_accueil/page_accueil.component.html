@@ -1,24 +1,31 @@
-<div id="accueil-component" class="">
-    <div class="" id="label_barre_recherche">Chercher une personne : </div>
-    <input id="barre_recherche" class="" type="text" list="list_historique" placeholder=" ex: john" [(ngModel)]="inputRecherche" (change)="recherchePersonnes()">
-    <datalist id="list_historique">
-        <option ></option>
-    </datalist>
+<div class="row">
+    <div class="col-sm-12 col-md-6">
+        <div id="recherche-input" >
+            <div class="" id="label_barre_recherche">Chercher une personne : </div>
+            <input id="barre_recherche" class="" type="text" list="list_historique" placeholder=" ex: john" [(ngModel)]="inputRecherche" (change)="recherchePersonnes()">
+            <datalist id="list_historique">
+                <option ></option>
+            </datalist>
+        </div>
+        <hr>
+        <table id="my-table">
+            <tbody>
+            <tr>
+                <th (click)="trierPar('status')">Status</th>
+                <th (click)="trierPar('prenom')">Prenom</th>
+                <th (click)="trierPar('nom')">Nom</th>
+            </tr>
+            <tr *ngIf="contenuTable.length==0"><td colspan="3">Personne dans la liste</td></tr>
+            <tr *ngFor="let unePersonne of contenuTable" [routerLink]="unePersonne.route">
+                <td>{{unePersonne.status}}</td>
+                <td>{{unePersonne.prenom}}</td>
+                <td>{{unePersonne.nom}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="ajouter-patient" class="col-sm-12 col-md-6">
+<!-- ICI TU AJOUTE LE FORMULAIRE -->
+    </div>
 </div>
-<hr>
-<table id="my-table">
-    <tbody>
-    <tr>
-        <th (click)="trierPar('status')">Status</th>
-        <th (click)="trierPar('prenom')">Prenom</th>
-        <th (click)="trierPar('nom')">Nom</th>
-    </tr>
-    <tr *ngIf="contenuTable.length==0"><td colspan="3">Personne dans la liste</td></tr>
-    <tr *ngFor="let unePersonne of contenuTable" [routerLink]="unePersonne.route">
-        <td>{{unePersonne.status}}</td>
-        <td>{{unePersonne.prenom}}</td>
-        <td>{{unePersonne.nom}}</td>
-    </tr>
-    </tbody>
-</table>
 <div id="tile" class="fade-out"></div>

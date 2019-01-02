@@ -23,7 +23,7 @@ export class Page_accueilComponent implements OnInit{
         //init attributs avec cabinetMedical
         let all = cabinetMedicalService.getAll();
         all.then(data => {
-            console.log(data);
+            //console.log(data);
             this.infirmiers = data.infirmiers;
             this.patients = data.patients;
             let tempInfirmiers = this.infirmiers.map(unInfirmier=> {
@@ -42,6 +42,7 @@ export class Page_accueilComponent implements OnInit{
 
         });
     }
+
     ngOnInit(): void {
         this.tileService.showTile(document.getElementById("tile"));
     }
@@ -51,13 +52,10 @@ export class Page_accueilComponent implements OnInit{
         this.contenuTable = this.contenuTableEntier.filter(chaquePersonne => ( chaquePersonne.nom.toUpperCase().includes(this.inputRecherche.toUpperCase()) || chaquePersonne.prenom.toUpperCase().includes(this.inputRecherche.toUpperCase()) ) );
     }
 
-    goTo(unePersonne: any) {
-        console.log("redirect to "+unePersonne.prenom);
-        //this.router
-    }
-
     trierPar(colone: string) {
         this.contenuTable.sort((a,b) => this.toggle * a[colone].localeCompare(b[colone]));
         this.toggle *= -1;
     }
+
+    //ici tu peut ajouter les methode dont tu as besoin pour le formulaire
 }

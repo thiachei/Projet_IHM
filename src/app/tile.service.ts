@@ -26,6 +26,7 @@ export class TileService{
             elt.className = this.myTile.style;
             setTimeout(function (elt,myTile) {
                 elt.classList.add("fade-out", myTile.style);
+                this.myTile = {style: "tile-style-1", content:""} ;
             },1, elt, this.myTile);
         }
     }
