@@ -81,7 +81,7 @@ export class CabinetMedicalService {
           prenom  : I.querySelector("prénom").textContent,
           nom     : I.querySelector("nom"   ).textContent,
           photo   : I.querySelector("photo" ).textContent,
-          adresse : this.parseAdresse(I),
+          adresse : this.parseAdresse(<any>I),
           patients: []
       }) );
   }
@@ -95,7 +95,7 @@ export class CabinetMedicalService {
           sexe    : sexeEnum[I.querySelector("sexe").textContent],
           numeroSecuriteSociale : I.querySelector("numéro").textContent,
           naissance: I.querySelector("naissance").textContent,
-          adresse : this.parseAdresse(I)
+          adresse : this.parseAdresse(<any>I)
       }) );
   }
 

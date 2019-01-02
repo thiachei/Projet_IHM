@@ -27,3 +27,29 @@ body{
     width: 100%;
     height: 50px;
 }
+#tile{
+    position: absolute;
+    display: inline;
+    right: 8%;
+    top: 7%;
+    background-color: cornflowerblue;
+    border-radius: 20px;
+    border: solid 1px black;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 30px;
+}
+.tile-style-1{
+    background-color: cornflowerblue !important;
+}
+.tile-style-2{
+    background-color: burlywood !important;
+}
+.tile-style-3{
+    background-color: crimson !important;
+}
+.fade-out {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 3s, opacity 1s 2s ease-in-out;
+}

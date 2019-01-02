@@ -5,4 +5,6 @@ import {Component} from '@angular/core';
     selector:    'entry-component',
     templateUrl: 'entry.component.html'
 })
-export default class EntryComponent {}
+export default class EntryComponent {
+//todo set titles from xml;
+}

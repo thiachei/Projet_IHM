@@ -1,7 +1,8 @@
-import {Component} from "@angular/core";
+import {AfterViewChecked, AfterViewInit, Component, Input, OnInit} from "@angular/core";
 import {CabinetMedicalService} from "../cabinet-medical.service";
 import {InfirmierInterface} from "../dataInterfaces/infirmier";
 import {PatientInterface} from "../dataInterfaces/patient";
+import {TileService} from "../tile.service";
 
 @Component({
     moduleId: module.id,
@@ -10,14 +11,15 @@ import {PatientInterface} from "../dataInterfaces/patient";
     styleUrls: ['page_accueil.component.css']
 })
 
-export class Page_accueilComponent {
+export class Page_accueilComponent implements OnInit{
     inputRecherche: string = "";
     infirmiers:InfirmierInterface[] = [];
     patients: PatientInterface[] = [];
     contenuTableEntier = [];
     contenuTable:any[] = [];
+    toggle = 1;
 
-    constructor(private cabinetMedicalService:CabinetMedicalService){
+    constructor(private cabinetMedicalService:CabinetMedicalService, private tileService:TileService){
         //init attributs avec cabinetMedical
         let all = cabinetMedicalService.getAll();
         all.then(data => {
@@ -40,6 +42,9 @@ export class Page_accueilComponent {
 
         });
     }
+    ngOnInit(): void {
+        this.tileService.showTile(document.getElementById("tile"));
+    }
 
     recherchePersonnes(){
         console.log("Je cherche la personne : "+this.inputRecherche);
@@ -52,6 +57,7 @@ export class Page_accueilComponent {
     }
 
     trierPar(colone: string) {
-        this.contenuTable.sort((a,b) => a[colone].localeCompare(b[colone]));
+        this.contenuTable.sort((a,b) => this.toggle * a[colone].localeCompare(b[colone]));
+        this.toggle *= -1;
     }
 }
