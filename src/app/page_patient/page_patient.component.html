@@ -2,13 +2,13 @@
     <div class="row">
         <div class="col-xs-12">
             <h2>
-                <span *ngIf="!edit">{{cePatient.prenom}}</span>
+                <span *ngIf="!edit">{{cePatient.prenom}}</span> 
                 <input *ngIf="edit" type="text" title="Prénom"/>
                 <span *ngIf="!edit">{{cePatient.nom}}</span>
                 <input *ngIf="edit" type="text" title="Nom"/>
             </h2>
             <input type="button" value="Edit" (click)="edit = true">
-            <input type="button" value="Save" (click)="edit = false">
+            <input type="button" value="Save" (click)="updatePatient()">
             <p>Genre:
                 <span *ngIf="!edit">{{cePatient.sexe}}</span>
                 <select *ngIf="edit" title="Genre">
@@ -43,6 +43,7 @@
                         <div class="col-8 ">Intervenant</div>
                     </div>
                 </div>
+                <div class="row" *ngIf="cePatient.visites.length==0">Pas de visites</div>
                 <div class="col-12  visite_desc" *ngFor="let uneVisite of cePatient.visites" >
                     <div class="row" (click)="uneVisite.show = !uneVisite.show">
                         <div class="col-12" >
@@ -53,6 +54,7 @@
                         </div>
                         <div class="col-12" *ngIf="uneVisite.show" >
                             <div class="row ">
+                                <div class="col-12" *ngIf="uneVisite.actes.length==0">Pas de visites</div>
                                 <div class="col-12 acte" *ngFor="let unActe of uneVisite.actes" title="{{unActe.type.text}}">
                                     {{unActe.text}}
                                 </div>

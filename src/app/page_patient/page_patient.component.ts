@@ -45,7 +45,6 @@ export class Page_patientComponent implements OnInit{
                         this.tileService.setTile({style: "tile-style-2",content: "Patient non trouvé"});
                     });
                 }
-                console.log(this.cePatient);
 
             });
         });
@@ -53,5 +52,13 @@ export class Page_patientComponent implements OnInit{
 
     toggle_actes(visite){
 
+    }
+
+    updatePatient() {
+        this.cePatientTemp.nom = "Aire";
+        console.log("toto1");
+        console.log(this.cePatientTemp);
+
+        this.cabinetMedicalService.setPatient(this.cePatientTemp).then(success => success?this.cePatient = this.cePatientTemp:this.cePatientTemp = this.cePatient);
     }
 }

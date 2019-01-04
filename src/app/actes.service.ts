@@ -84,7 +84,7 @@ export class ActesService {
                 text    : elt.textContent
             }
         }, {myActesArray: myActesArray, typesArray: this.typesArray});
-        console.log(myActesArray);
+        //console.log(myActesArray);
         return myActesArray;
     }
 }
