@@ -3,9 +3,9 @@ import {CabinetMedicalService} from "../cabinet-medical.service";
 import {InfirmierInterface} from "../dataInterfaces/infirmier";
 import {PatientInterface} from "../dataInterfaces/patient";
 import {TileService} from "../tile.service";
+import {ConstantsService} from "../constants.service";
 
 @Component({
-    moduleId: module.id,
     selector: 'page-accueil',
     templateUrl: 'page_accueil.component.html',
     styleUrls: ['page_accueil.component.css']
@@ -19,13 +19,17 @@ export class Page_accueilComponent implements OnInit{
     contenuTable:any[] = [];
     toggle = 1;
 
-    constructor(private cabinetMedicalService:CabinetMedicalService, private tileService:TileService){
+    constructor(private cabinetMedicalService:CabinetMedicalService, private tileService:TileService, private constantsService:ConstantsService){
         //init attributs avec cabinetMedical
         let all = cabinetMedicalService.getAll();
         all.then(data => {
             //console.log(data);
             this.infirmiers = data.infirmiers;
             this.patients = data.patients;
+            constantsService.hospitalName = data.nom;
+            constantsService.hospitalAddress = data.adresse["toString"];
+
+
             let tempInfirmiers = this.infirmiers.map(unInfirmier=> {
                 unInfirmier["status"] = 'Infirmier';
                 unInfirmier["route"] = ["/infirmier",unInfirmier.id];
@@ -39,7 +43,6 @@ export class Page_accueilComponent implements OnInit{
             this.contenuTableEntier = tempInfirmiers.concat(<any[]>tempPatients);
             this.contenuTableEntier.sort((a,b) => a.prenom.localeCompare(b.prenom));
             this.contenuTable = this.contenuTableEntier;
-
         });
     }
 

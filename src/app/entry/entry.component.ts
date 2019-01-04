@@ -1,4 +1,5 @@
 import {Component} from '@angular/core';
+import {ConstantsService} from "../constants.service";
 
 @Component({
     //moduleId:     module.id,
@@ -6,5 +7,8 @@ import {Component} from '@angular/core';
     templateUrl: 'entry.component.html'
 })
 export default class EntryComponent {
-//todo set titles from xml;
+    constantsService;
+    constructor(constantsService:ConstantsService){
+        this.constantsService = constantsService;
+    }
 }

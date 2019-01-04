@@ -17,7 +17,7 @@ export class CabinetMedicalService {
     private cabinet: CabinetInterface;
     private serverUrl_cabinetInfirmier: string = "http://localhost:8090/data/cabinetInfirmier.xml?responseType=text";
     private serverUrl_addPatient: string = "http://localhost:8090/addPatient";
-    private responseObj: { infirmiers: any[]; patient: {}; nom: string; adresse: {} };
+    private responseObj: { infirmiers: InfirmierInterface[]; patient: PatientInterface};
 
     constructor(private http: HttpClient, private actesService: ActesService) {
     }
@@ -57,52 +57,45 @@ export class CabinetMedicalService {
       }
     */
 
-    async getAll(){
+    async getAll():Promise<CabinetInterface>{
+        let responseObj: CabinetInterface ={infirmiers: <InfirmierInterface[]>[], patients: <PatientInterface[]>[], adresse: <Adresse>{}, nom: ""};
         try {
             let res = await this.http.get(this.serverUrl_cabinetInfirmier, {observe: 'response', responseType: 'text'}).toPromise();
             //console.log("resolving promise");
             if(res.status === 200){
-                let responseObj = { infirmiers:[], patients:[], nom : "", adresse: {} };
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(res.body, 'text/xml');
                 responseObj.infirmiers = this.parseInfirmiers(doc);
                 responseObj.patients = this.parsePatients(doc);
                 responseObj.nom = doc.querySelector("nom").textContent;
                 responseObj.adresse = this.parseAdresse(doc);
-                return responseObj;
             }else{
                 console.error(res);
-                return [];
             }
         } catch(err) {
             console.error('ERROR in getAll', err);
-            return [];
         }
+        return await responseObj;
     }
 
-    async getPatient(numSS: String){
+    async getPatient(numSS: string): Promise<{ infirmiers:InfirmierInterface[], patient: PatientInterface}>{
+        this.responseObj = { infirmiers:<InfirmierInterface[]>[], patient: <PatientInterface>{}};
         try {
             let res = await this.http.get(this.serverUrl_cabinetInfirmier, {observe: 'response', responseType: 'text'}).toPromise();
             //console.log("resolving promise");
             if(res.status === 200){
-                this.responseObj = { infirmiers:[], patient: {}, nom : "", adresse: {} };
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(res.body, 'text/xml');
                 this.responseObj.infirmiers = await this.parseInfirmiers(doc);
                 this.responseObj.patient = await this.parsePatientsFull(doc, numSS);
-                this.responseObj.nom = doc.querySelector("nom").textContent;
-                this.responseObj.adresse = this.parseAdresse(doc);
-                return this.responseObj;
             }else{
                 console.error(res);
-                return [];
             }
         } catch(err) {
             console.error('ERROR in getAll', err);
-            return [];
         }
+        return await this.responseObj;
     }
-
 
     async setPatientAlt(nom,prenom, genre, dateDeNaissance, numeroSS, rue, numeroBatiment, ville,codePostal, etage){
         let myBody = {
@@ -119,13 +112,10 @@ export class CabinetMedicalService {
         };
         let response = await this.http.post(this.serverUrl_addPatient, myBody, {observe: 'response', responseType: 'text'}).toPromise();
 
-        console.log(response);
         if (response.status ===200 ){
-            console.log("response OK");
             return true;
         }else{
             console.log("response KO");
-
             console.error(response);
             return false;
         }
@@ -133,13 +123,14 @@ export class CabinetMedicalService {
 
     async setPatient(patient:PatientInterface){
         console.log("cece");
-        await this.setPatientAlt(patient.nom, patient.prenom, patient.sexe, patient.naissance, patient.numeroSecuriteSociale,
+        console.log(patient);
+
+        return await this.setPatientAlt(patient.nom, patient.prenom, patient.sexe, patient.naissance, patient.numeroSecuriteSociale,
             patient.adresse.rue, patient.adresse.numero, patient.adresse.ville, patient.adresse.codePostal, patient.adresse.etage);
-        console.log("caca");
     }
 
     private parseInfirmiers(doc:Document):InfirmierInterface[]{
-        const infirmiersXML:Element[] =  <Element[]>Array.from( doc.querySelectorAll( "infirmiers > infirmier" ) ); //transformer la NodeList en tableau pour le map
+        const infirmiersXML: Element[] =  <Array<Element>> Array.from( doc.querySelectorAll( "infirmiers > infirmier" ) ); //transformer la NodeList en tableau pour le map
 
         let myInfirmiersArray: InfirmierInterface[] = [];
 
@@ -169,7 +160,7 @@ export class CabinetMedicalService {
     }
 
     private parsePatients(document:Document):PatientInterface[]{
-        const patientXML =  <Element[]>Array.from( document.querySelectorAll( "patients > patient" ) ); //transformer la NodeList en tableau pour le map
+        const patientXML: Element[] =  <Array<Element>> Array.from( document.querySelectorAll( "patients > patient" ) ); //transformer la NodeList en tableau pour le map
         //console.log(patientXML);
         return patientXML.map( I => ({
             prenom  : I.querySelector("prénom").textContent,
@@ -182,20 +173,20 @@ export class CabinetMedicalService {
         }) );
     }
 
-    async parsePatientsFull(document:Document, numSS: String):PatientInterface{
-        const patientXML:Element = Array.from( document.querySelectorAll( "patients > patient > numéro" ) ).find(numeroXLM => numeroXLM.textContent.localeCompare(numSS) === 0).parentElement; //transformer la NodeList en tableau pour le map // le cast est degueu
+    async parsePatientsFull(document:Document, numSS: string){
+        const patientXML:Element = Array.from( document.querySelectorAll( "patients > patient > numéro" ) ).find(numeroXLM => numeroXLM.textContent.localeCompare(numSS) === 0).parentElement; //transformer la NodeList en tableau pour le map
         //console.log(patientXML);
 
         let actesArray: Acte[] = await this.actesService.getAll();
 
-        let visitesXML = <Element[]>Array.from(patientXML.getElementsByTagName("visite"));
+        let visitesXML: Element[] =  <Array<Element>> Array.from( patientXML.getElementsByTagName("visite"));
 
         let visiteArray: Visite[] = visitesXML.map( elt => {
-            let acteIdsArray = Array.from(<Element[]>elt.querySelectorAll("acte")).map(acteXML => acteXML.getAttribute("id") );
+            //let acteIdsArray = Array.from( <NodeListOf<Element>>elt.querySelectorAll("acte")).map(acteXML => (<Element>acteXML).getAttribute("id") );
             return {
                 date  : elt.getAttribute("date")? elt.getAttribute("date"):"pas de date",
                 intervenant: elt.getAttribute("intervenant")?this.responseObj.infirmiers[elt.getAttribute("intervenant")]:{nom:"Pas d'intervenant", prenom: ""},
-                actes : Array.from(<Element[]>elt.querySelectorAll("acte")).map(acteXML => actesArray[acteXML.getAttribute("id")] )
+                actes : (<Element[]>Array.from(elt.querySelectorAll("acte"))).map(acteXML => actesArray[acteXML.getAttribute("id")] )
             };
         });
 

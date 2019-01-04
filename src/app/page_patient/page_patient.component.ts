@@ -6,9 +6,9 @@ import {PatientInterface} from "../dataInterfaces/patient";
 import {sexeEnum} from "../dataInterfaces/sexe";
 import {TileService} from "../tile.service";
 import {ActesService} from "../actes.service";
+import {CabinetInterface} from "../dataInterfaces/cabinet";
 
 @Component({
-    //moduleId: module.id,
     selector: 'page-patient',
     templateUrl: 'page_patient.component.html',
     styleUrls: ['page_patient.component.css']
@@ -20,7 +20,7 @@ export class Page_patientComponent implements OnInit{
     patients: PatientInterface[];
     cePatient ;
     cePatientTemp:PatientInterface;
-    toutesPersonnes: Promise;
+    toutesPersonnes: Promise<{ infirmiers: InfirmierInterface[]; patient: PatientInterface}>;
     edit: boolean;
 
     constructor(private cabinetMedicalService:CabinetMedicalService, private route: ActivatedRoute, private router: Router, private tileService: TileService, private actesService:ActesService){
@@ -50,15 +50,22 @@ export class Page_patientComponent implements OnInit{
         });
     }
 
-    toggle_actes(visite){
-
-    }
-
     updatePatient() {
-        this.cePatientTemp.nom = "Aire";
-        console.log("toto1");
+        console.log("updqtePqtient");
         console.log(this.cePatientTemp);
 
-        this.cabinetMedicalService.setPatient(this.cePatientTemp).then(success => success?this.cePatient = this.cePatientTemp:this.cePatientTemp = this.cePatient);
+        this.edit = false;
+        this.cabinetMedicalService.setPatient(this.cePatientTemp).then(success => {
+            console.log("then");
+            console.log(success);
+            if (success) {
+                console.log("cePatientTemp");
+                console.log(this.cePatientTemp);
+                this.cePatient = this.cePatientTemp;
+                //this.tileService.showTile(  document.getElementById("tile"),{content:"Patient modifié avec succes",style:"tile-style-1"});
+            } else {
+                this.cePatientTemp = this.cePatient;
+            }
+        });
     }
 }

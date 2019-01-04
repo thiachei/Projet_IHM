@@ -14,6 +14,7 @@ import {Page_patientComponent} from "./page_patient/page_patient.component";
 import EntryComponent from "./entry/entry.component";
 import {TileService} from "./tile.service";
 import {ActesService} from "./actes.service";
+import {ConstantsService} from "./constants.service";
 
 
 const appRoutes: Routes = [
@@ -29,7 +30,7 @@ const appRoutes: Routes = [
       Page_accueilComponent,
       Page_infirmierComponent,
       Page_patientComponent,
-      EntryComponent
+      EntryComponent,
   ],
   imports: [
       BrowserModule,
@@ -38,7 +39,7 @@ const appRoutes: Routes = [
       FormsModule,
       RouterModule.forRoot(appRoutes)
   ],
-  providers: [CabinetMedicalService, ActesService, TileService],
+  providers: [CabinetMedicalService, ActesService, TileService, ConstantsService],
   bootstrap: [EntryComponent ]
 })
 export class AppModule { }

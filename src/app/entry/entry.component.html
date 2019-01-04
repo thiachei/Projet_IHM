@@ -1,8 +1,8 @@
 <div id="my-nav">
     <a href="/" id="my-logo">
-        <img src="assets/hospital-icon.png"><span>Mon hôpital</span>
+        <img src="assets/hospital-icon.png"><span>{{constantsService.hospitalName}}</span>
     </a>
 </div>
 <router-outlet ></router-outlet>
-<div id="my-footer"></div>
+<div id="my-footer">{{constantsService.hospitalAddress}}</div>
 <!-- Routed components go here -->

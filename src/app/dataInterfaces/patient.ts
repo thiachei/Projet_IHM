@@ -1,13 +1,15 @@
-import {sexeEnum} from "./sexe";
 import {Adresse} from "./adresse";
 import {Visite} from "./visite";
+import {Genre} from "./sexe";
+
+
 
 export interface PatientInterface {
- prenom: string;
- nom: string;
- sexe: sexeEnum;
- numeroSecuriteSociale: string;
- naissance: string;
- adresse: Adresse;
- visites: Visite[];
+    prenom: string;
+    nom: string;
+    sexe: Genre;
+    numeroSecuriteSociale: string;
+    naissance: string;
+    adresse: Adresse;
+    visites: Visite[];
 }

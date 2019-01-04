@@ -3,33 +3,33 @@
         <div class="col-xs-12">
             <h2>
                 <span *ngIf="!edit">{{cePatient.prenom}}</span> 
-                <input *ngIf="edit" type="text" title="Prénom"/>
+                <input *ngIf="edit" type="text" title="Prénom" [ngModel]="cePatientTemp.prenom"/>
                 <span *ngIf="!edit">{{cePatient.nom}}</span>
-                <input *ngIf="edit" type="text" title="Nom"/>
+                <input *ngIf="edit" type="text" title="Nom" [ngModel]="cePatientTemp.nom"/>
             </h2>
             <input type="button" value="Edit" (click)="edit = true">
             <input type="button" value="Save" (click)="updatePatient()">
             <p>Genre:
                 <span *ngIf="!edit">{{cePatient.sexe}}</span>
-                <select *ngIf="edit" title="Genre">
+                <select *ngIf="edit" title="Genre" [ngModel]="cePatientTemp.sexe">
                     <option value="M">Homme</option>
                 </select>
             </p>
             <p>Adresse:
                 <span *ngIf="!edit">{{cePatient.adresse.toString}}</span>
-                <input *ngIf="edit" title="Numéro"/>
-                <input *ngIf="edit" title="Rue"/>
-                <input *ngIf="edit" title="Etage (facultatif)"/>
-                <input *ngIf="edit" title="Code Postal"/>
-                <input *ngIf="edit" title="Ville"/>
+                <input *ngIf="edit" title="Numéro" [ngModel]="cePatientTemp.adresse.numero"/>
+                <input *ngIf="edit" title="Rue" [ngModel]="cePatientTemp.adresse.rue"/>
+                <input *ngIf="edit" title="Etage (facultatif)" [ngModel]="cePatientTemp.adresse.etage"/>
+                <input *ngIf="edit" title="Code Postal" [ngModel]="cePatientTemp.adresse.codePostal"/>
+                <input *ngIf="edit" title="Ville" [ngModel]="cePatientTemp.adresse.ville"/>
             </p>
             <p>Date de naissance :
                 <span *ngIf="!edit">{{cePatient.naissance}}</span>
-                <input *ngIf="edit" title="Date de naissance: JJ-MM-AAAA"/>
+                <input *ngIf="edit" title="Date de naissance: JJ-MM-AAAA" [ngModel]="cePatientTemp.naissance"/>
             </p>
             <p>Numero de sécutité Social :
                 <span *ngIf="!edit">{{cePatient.numeroSecuriteSociale}}</span>
-                <input *ngIf="edit" title="Numéro de Sécurité Social"/>
+                <input *ngIf="edit" title="Numéro de Sécurité Social" value="{{cePatient.numeroSecuriteSociale}}" disabled/>
             </p>
         </div>
     </div>
@@ -66,3 +66,4 @@
         </div>
     </div>
 </div>
+<div id="tile" class="fade-out"></div>
