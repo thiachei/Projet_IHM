@@ -22,11 +22,13 @@ export class Page_patientComponent implements OnInit{
     cePatientTemp:PatientInterface;
     toutesPersonnes: Promise<{ infirmiers: InfirmierInterface[]; patient: PatientInterface}>;
     edit: boolean;
+    myGenreEnum;
 
     constructor(private cabinetMedicalService:CabinetMedicalService, private route: ActivatedRoute, private router: Router, private tileService: TileService, private actesService:ActesService){
         this.numeroSS = "";
+        this.myGenreEnum = sexeEnum;
         this.edit = false;
-        this.cePatient = {nom:"",prenom:"",sexe:sexeEnum.A,numeroSecuriteSociale:"",adresse:{codePostal:0,etage:"",numero:"",rue:"",ville:"",toString:" Pas d'adresse"},naissance:"",visites:[]};
+        this.cePatient = {nom:"",prenom:"",sexe:sexeEnum['A'],numeroSecuriteSociale:"",adresse:{codePostal:0,etage:"",numero:"",rue:"",ville:"",toString:" Pas d'adresse"},naissance:"",visites:[]};
     }
 
     ngOnInit(){
@@ -37,7 +39,7 @@ export class Page_patientComponent implements OnInit{
                 //console.log(data);
                 this.infirmiers = data.infirmiers;
                 this.cePatient = data.patient;
-                this.cePatientTemp = this.cePatient;
+                this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
                 this.cePatient.visites.map(uneVisite => uneVisite.show = false);
 
                 if (this.cePatient === undefined){
@@ -46,13 +48,12 @@ export class Page_patientComponent implements OnInit{
                     });
                 }
 
+
             });
         });
     }
 
     updatePatient() {
-        console.log("updqtePqtient");
-        console.log(this.cePatientTemp);
 
         this.edit = false;
         this.cabinetMedicalService.setPatient(this.cePatientTemp).then(success => {
@@ -61,11 +62,19 @@ export class Page_patientComponent implements OnInit{
             if (success) {
                 console.log("cePatientTemp");
                 console.log(this.cePatientTemp);
-                this.cePatient = this.cePatientTemp;
+                //this.cePatient = this.cePatientTemp;
+                this.cePatient = JSON.parse(JSON.stringify(this.cePatientTemp));
                 //this.tileService.showTile(  document.getElementById("tile"),{content:"Patient modifié avec succes",style:"tile-style-1"});
             } else {
-                this.cePatientTemp = this.cePatient;
+                //todo show tile
+                this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
             }
         });
+    }
+
+    cancelUpdate() {
+        this.edit = false;
+        this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
+        //todo: tile
     }
 }

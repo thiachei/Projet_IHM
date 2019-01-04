@@ -4,24 +4,20 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `ng start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
-## Running unit tests
+## PB back-end
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+lors d'une modification de patient, les visites sont suprimées (L.201-203)
 
-## Running end-to-end tests
+lors de la création d'un patient, une visite est crée(L.201-203) et sans intervenant qui plus est
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+CORS defini dans le serverCabinetMedical.ts
 
-## Further help
+Le parametre correspondant à la date de naissance dans la requette sur /addPatient n'est pas `patientBirthday ` mais `naissance` (
+et la requete ne retourne rien, on aurai attendu le nouvelle element enregistré)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).

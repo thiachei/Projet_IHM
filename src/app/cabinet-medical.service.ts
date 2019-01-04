@@ -122,10 +122,9 @@ export class CabinetMedicalService {
     }
 
     async setPatient(patient:PatientInterface){
-        console.log("cece");
         console.log(patient);
 
-        return await this.setPatientAlt(patient.nom, patient.prenom, patient.sexe, patient.naissance, patient.numeroSecuriteSociale,
+        return await this.setPatientAlt(patient.nom, patient.prenom, patient.sexe.id, patient.naissance, patient.numeroSecuriteSociale,
             patient.adresse.rue, patient.adresse.numero, patient.adresse.ville, patient.adresse.codePostal, patient.adresse.etage);
     }
 
@@ -218,8 +217,8 @@ export class CabinetMedicalService {
             };
             monAdresse.toString = "".concat(
                 monAdresse.numero," ",
-                monAdresse.rue," ",
-                monAdresse.etage.localeCompare("NC")!==0?"(étage "+monAdresse.etage+") ":" ",
+                monAdresse.rue,
+                monAdresse.etage.localeCompare("NC")!==0?" (étage "+monAdresse.etage+"), ":", ",
                 monAdresse.codePostal.toString()," ",
                 monAdresse.ville);
             return monAdresse;
