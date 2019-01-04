@@ -9,12 +9,14 @@
         </div>
         <hr>
         <table id="my-table">
-            <tbody>
+            <thead>
             <tr>
                 <th (click)="trierPar('status')">Status</th>
                 <th (click)="trierPar('prenom')">Prenom</th>
                 <th (click)="trierPar('nom')">Nom</th>
             </tr>
+            </thead>
+            <tbody>
             <tr *ngIf="contenuTable.length==0"><td colspan="3">Personne dans la liste</td></tr>
             <tr *ngFor="let unePersonne of contenuTable" [routerLink]="unePersonne.route">
                 <td>{{unePersonne.status}}</td>

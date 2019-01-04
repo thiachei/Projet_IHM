@@ -1,1 +1,1 @@
-export var sexeEnum = {M : 'Homme', F: 'Femme', A:'Autre'};
+export var sexeEnum = {M : 'Homme', F: 'Femme', A:'Non-binaire'};

@@ -5,6 +5,9 @@ import {HttpClient, HttpResponse} from '@angular/common/http';
 import { CabinetInterface } from './dataInterfaces/cabinet';
 import { PatientInterface } from './dataInterfaces/patient';
 import { sexeEnum } from './dataInterfaces/sexe';
+import {ActesService} from "./actes.service";
+import {Acte} from "./dataInterfaces/acte";
+import {Visite} from "./dataInterfaces/visite";
 
 @Injectable()
 
@@ -12,8 +15,9 @@ export class CabinetMedicalService {
 
   private cabinet: CabinetInterface;
   private serverUrl: string = "http://localhost:8090/data/cabinetInfirmier.xml?responseType=text";
+    private responseObj: { infirmiers: any[]; patient: {}; nom: string; adresse: {} };
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private actesService: ActesService) {
   }
 
 /*
@@ -74,20 +78,62 @@ export class CabinetMedicalService {
       }
   }
 
+  async getPatient(numSS: String){
+      try {
+          let res = await this.http.get(this.serverUrl, {observe: 'response', responseType: 'text'}).toPromise();
+          //console.log("resolving promise");
+          if(res.status === 200){
+              this.responseObj = { infirmiers:[], patient: {}, nom : "", adresse: {} };
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(res.body, 'text/xml');
+              this.responseObj.infirmiers = await this.parseInfirmiers(doc);
+              this.responseObj.patient = await this.parsePatientsFull(doc, numSS);
+              this.responseObj.nom = doc.querySelector("nom").textContent;
+              this.responseObj.adresse = this.parseAdresse(doc);
+              return this.responseObj;
+          }else{
+              console.error(res);
+              return [];
+          }
+      } catch(err) {
+          console.error('ERROR in getAll', err);
+          return [];
+      }
+  }
+
   private parseInfirmiers(doc:Document):InfirmierInterface[]{
-      const infirmiersXML:Node[] =  Array.from( doc.querySelectorAll( "infirmiers > infirmier" ) ); //transformer la NodeList en tableau pour le map
-      return infirmiersXML.map( I => ({
-          id      : I.getAttribute("id"),
-          prenom  : I.querySelector("prénom").textContent,
-          nom     : I.querySelector("nom"   ).textContent,
-          photo   : I.querySelector("photo" ).textContent,
-          adresse : this.parseAdresse(<any>I),
-          patients: []
-      }) );
+      const infirmiersXML:Element[] =  <Element[]>Array.from( doc.querySelectorAll( "infirmiers > infirmier" ) ); //transformer la NodeList en tableau pour le map
+
+      let myInfirmiersArray: InfirmierInterface[] = [];
+
+      infirmiersXML.forEach(function(elt){
+          let id: string = elt.getAttribute("id");
+          let unInfirmier=  {
+              id      : id,
+              prenom  : elt.querySelector("prénom").textContent,
+              nom     : elt.querySelector("nom"   ).textContent,
+              photo   : elt.querySelector("photo" ).textContent,
+              adresse : this.parseAdresse(<any>elt),
+              patients: []
+          };
+          this.myInfirmiersArray.push(unInfirmier);//on ajoute les infirmiers normalement pour avoir acces aux fonction usuelles telles que map() forEach() ou encore length
+          this.myInfirmiersArray[id] = {//on ajoute les infirmier indexé par leur "id" aussi pour pouvoir y acceder directement avec infirmierTableau[id]
+              id      : id,
+              prenom  : elt.querySelector("prénom").textContent,
+              nom     : elt.querySelector("nom"   ).textContent,
+              photo   : elt.querySelector("photo" ).textContent,
+              adresse : this.parseAdresse(<any>elt),
+              patients: []
+          };
+      }, {myInfirmiersArray: myInfirmiersArray, parseAdresse: this.parseAdresse});
+      console.log(myInfirmiersArray);
+      return myInfirmiersArray;
+
+
   }
 
   private parsePatients(document:Document):PatientInterface[]{
-      const patientXML =  Array.from( document.querySelectorAll( "patients > patient" ) ); //transformer la NodeList en tableau pour le map
+      const patientXML =  <Element[]>Array.from( document.querySelectorAll( "patients > patient" ) ); //transformer la NodeList en tableau pour le map
       //console.log(patientXML);
       return patientXML.map( I => ({
           prenom  : I.querySelector("prénom").textContent,
@@ -95,8 +141,37 @@ export class CabinetMedicalService {
           sexe    : sexeEnum[I.querySelector("sexe").textContent],
           numeroSecuriteSociale : I.querySelector("numéro").textContent,
           naissance: I.querySelector("naissance").textContent,
-          adresse : this.parseAdresse(<any>I)
+          adresse : this.parseAdresse(<any>I),
+          visites : []
       }) );
+  }
+
+  async parsePatientsFull(document:Document, numSS: String):PatientInterface{
+      const patientXML:Element = Array.from( document.querySelectorAll( "patients > patient > numéro" ) ).find(numeroXLM => numeroXLM.textContent.localeCompare(numSS) === 0).parentElement; //transformer la NodeList en tableau pour le map // le cast est degueu
+      //console.log(patientXML);
+
+      let actesArray: Acte[] = await this.actesService.getAll();
+
+      let visitesXML = <Element[]>Array.from(patientXML.getElementsByTagName("visite"));
+
+      let visiteArray: Visite[] = visitesXML.map( elt => {
+          let acteIdsArray = Array.from(<Element[]>elt.querySelectorAll("acte")).map(acteXML => acteXML.getAttribute("id") );
+          return {
+              date  : elt.getAttribute("date"),
+              intervenant: this.responseObj.infirmiers[elt.getAttribute("intervenant")],
+              actes : Array.from(<Element[]>elt.querySelectorAll("acte")).map(acteXML => actesArray[acteXML.getAttribute("id")] )
+          };
+      });
+
+      return {
+          prenom  : patientXML.querySelector("prénom").textContent,
+          nom     : patientXML.querySelector("nom").textContent,
+          sexe    : sexeEnum[patientXML.querySelector("sexe").textContent],
+          numeroSecuriteSociale : patientXML.querySelector("numéro").textContent,
+          naissance: patientXML.querySelector("naissance").textContent,
+          adresse : this.parseAdresse(<any>patientXML),
+          visites : visiteArray
+      };
   }
 
   private parseAdresse(document:Document):Adresse {

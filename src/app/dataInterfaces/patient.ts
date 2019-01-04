@@ -1,5 +1,6 @@
 import {sexeEnum} from "./sexe";
 import {Adresse} from "./adresse";
+import {Visite} from "./visite";
 
 export interface PatientInterface {
  prenom: string;
@@ -8,5 +9,5 @@ export interface PatientInterface {
  numeroSecuriteSociale: string;
  naissance: string;
  adresse: Adresse;
+ visites: Visite[];
 }
-

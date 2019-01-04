@@ -13,6 +13,7 @@ import {Page_infirmierComponent} from "./page_infirmier/page_infirmier.component
 import {Page_patientComponent} from "./page_patient/page_patient.component";
 import EntryComponent from "./entry/entry.component";
 import {TileService} from "./tile.service";
+import {ActesService} from "./actes.service";
 
 
 const appRoutes: Routes = [
@@ -37,7 +38,7 @@ const appRoutes: Routes = [
       FormsModule,
       RouterModule.forRoot(appRoutes)
   ],
-  providers: [CabinetMedicalService, TileService],
+  providers: [CabinetMedicalService, ActesService, TileService],
   bootstrap: [EntryComponent ]
 })
 export class AppModule { }

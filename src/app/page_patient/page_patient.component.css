@@ -1,0 +1,72 @@
+td, th{
+    padding: 8px;
+}
+.act_td{
+    padding: 0;
+}
+.patients_table, .patient_row {
+    border: black solid 2px;
+}
+.patient_row:hover {
+    cursor: pointer;
+    background-color: dimgrey;
+}
+.patient_row_acte{
+    background-color: #6495ed;
+
+}
+.row_acte_header{
+}
+.row_acte:nth-child(even){
+    background-color: #73cfed;
+}
+.actes_table{
+    width: 100%;
+    text-align: center;
+}
+.removed{
+    display: none;
+}
+.bordure{
+    border: black solid 2px;
+}
+
+
+.visites_div{
+    border: black solid 2px;
+    position: relative;
+    text-align: center;
+}
+.visites_title{
+    font-weight: bold;
+    font-size: 1.8em;
+    background-color: grey;
+}
+.table_div{
+    border-top: black solid 2px;
+    background-color: cornflowerblue;
+}
+.table_header{
+    font-weight: bold;
+    background-color: burlywood;
+    border-bottom: 1px solid black;
+}
+.visite_desc:nth-child(even){
+    background-color: #cecece;
+}
+.visite_desc:nth-child(odd){
+    background-color: #fff;
+}
+.visite_row:hover{
+    cursor: pointer;
+    background-color: dimgrey !important;
+}
+.clicked{
+    background-color: dimgrey !important;
+}
+.acte{
+    border-top: 1px solid black ;
+}
+.acte:last-child{
+    border-bottom: 1px solid black ;
+}
