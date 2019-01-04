@@ -26,11 +26,11 @@ export class ActesService {
                 return this.actesArray;
             }else{
                 console.error(res);
-                return [];
+                return null;
             }
         } catch(err) {
             console.error('ERROR in getAll', err);
-            return [];
+            return null;
         }
     }
 
@@ -50,7 +50,7 @@ export class ActesService {
                 return [];
             }
         } catch(err) {
-            console.error('ERROR in getAll', err);
+            console.error('ERROR in getActesFor', err);
             return [];
         }
         //return this.actesArray.filter( unActe => acteIdsArray.includes(unActe.id));

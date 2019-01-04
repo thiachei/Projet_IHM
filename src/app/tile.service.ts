@@ -20,6 +20,7 @@ export class TileService{
         if(tileToShow){
             this.myTile = tileToShow;
         }
+
         if(this.myTile.content){
             elt.textContent = this.myTile.content;
             elt.classList.add();
@@ -27,7 +28,7 @@ export class TileService{
             setTimeout(function (elt,myTile) {
                 elt.classList.add("fade-out", myTile.style);
                 this.myTile = {style: "tile-style-1", content:""} ;
-            },1, elt, this.myTile);
+            },100, elt, this.myTile);//100 is magic number to be sure the view is set
         }
     }
 

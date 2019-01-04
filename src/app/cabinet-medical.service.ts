@@ -57,44 +57,64 @@ export class CabinetMedicalService {
       }
     */
 
-    async getAll():Promise<CabinetInterface>{
+    getAll():Promise<any>{
         let responseObj: CabinetInterface ={infirmiers: <InfirmierInterface[]>[], patients: <PatientInterface[]>[], adresse: <Adresse>{}, nom: ""};
-        try {
-            let res = await this.http.get(this.serverUrl_cabinetInfirmier, {observe: 'response', responseType: 'text'}).toPromise();
-            //console.log("resolving promise");
-            if(res.status === 200){
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(res.body, 'text/xml');
-                responseObj.infirmiers = this.parseInfirmiers(doc);
-                responseObj.patients = this.parsePatients(doc);
-                responseObj.nom = doc.querySelector("nom").textContent;
-                responseObj.adresse = this.parseAdresse(doc);
-            }else{
-                console.error(res);
-            }
-        } catch(err) {
-            console.error('ERROR in getAll', err);
-        }
-        return await responseObj;
+        return new Promise((resolve,reject) => {
+            this.http.get(this.serverUrl_cabinetInfirmier, {observe: 'response', responseType: 'text'}).toPromise().then(
+                res =>{
+                    //console.log("resolving promise");
+                    if(res.status === 200){
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(res.body, 'text/xml');
+                        responseObj.infirmiers = this.parseInfirmiers(doc);
+                        responseObj.patients = this.parsePatients(doc);
+                        responseObj.nom = doc.querySelector("nom").textContent;
+                        responseObj.adresse = this.parseAdresse(doc);
+                        resolve(responseObj);
+                    }else{
+                        console.error('ERROR in getAll (bad values)',res);
+                        reject("Erreur serveur");
+                    }},
+                error => {
+                    console.error('ERROR in getAll (server unreachable)',error);
+                    reject("Erreur serveur inatteignable");
+                }
+            );
+        })
     }
 
-    async getPatient(numSS: string): Promise<{ infirmiers:InfirmierInterface[], patient: PatientInterface}>{
+     getPatient(numSS: string): Promise<any>{
         this.responseObj = { infirmiers:<InfirmierInterface[]>[], patient: <PatientInterface>{}};
-        try {
-            let res = await this.http.get(this.serverUrl_cabinetInfirmier, {observe: 'response', responseType: 'text'}).toPromise();
-            //console.log("resolving promise");
-            if(res.status === 200){
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(res.body, 'text/xml');
-                this.responseObj.infirmiers = await this.parseInfirmiers(doc);
-                this.responseObj.patient = await this.parsePatientsFull(doc, numSS);
-            }else{
-                console.error(res);
-            }
-        } catch(err) {
-            console.error('ERROR in getAll', err);
-        }
-        return await this.responseObj;
+
+        return new Promise((resolve, reject) => {
+            this.http.get(this.serverUrl_cabinetInfirmier, {observe: 'response', responseType: 'text'}).toPromise().then(
+                res => {
+                    //console.log("resolving promise");
+                    if(res.status === 200){
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(res.body, 'text/xml');
+                        this.responseObj.infirmiers = this.parseInfirmiers(doc);
+                        this.parsePatientsFull(doc, numSS).then(
+                            resp => {
+                                this.responseObj.patient = resp;
+                                resolve(this.responseObj);
+                            },
+                            err => {
+                                reject(err);
+                            }
+                        );
+                        //resolve(this.responseObj);fmsjfohdfieqsgfiergfidsgqfdafuk it was doinbg here
+                    }else{
+                        console.log(res);
+                        reject("Erreur serveur");
+                    }
+                },
+                error => {
+                    console.error('Cannot reach the server', error);
+                    reject("Erreur server inateignable");
+
+                });
+        });
     }
 
     async setPatientAlt(nom,prenom, genre, dateDeNaissance, numeroSS, rue, numeroBatiment, ville,codePostal, etage){
@@ -122,6 +142,7 @@ export class CabinetMedicalService {
     }
 
     async setPatient(patient:PatientInterface){
+        console.log("setPatient");
         console.log(patient);
 
         return await this.setPatientAlt(patient.nom, patient.prenom, patient.sexe.id, patient.naissance, patient.numeroSecuriteSociale,
@@ -172,11 +193,17 @@ export class CabinetMedicalService {
         }) );
     }
 
-    async parsePatientsFull(document:Document, numSS: string){
-        const patientXML:Element = Array.from( document.querySelectorAll( "patients > patient > numéro" ) ).find(numeroXLM => numeroXLM.textContent.localeCompare(numSS) === 0).parentElement; //transformer la NodeList en tableau pour le map
+     async parsePatientsFull(document:Document, numSS: string){
+        const numeroXML:Node = Array.from( document.querySelectorAll( "patients > patient > numéro" ) ).find(numeroXLM => numeroXLM.textContent.localeCompare(numSS) === 0); //transformer la NodeList en tableau pour le map
         //console.log(patientXML);
-
+        if (numeroXML == undefined){
+            return Promise.reject("Patient pas trouvé");
+        }
+        const patientXML:Element = numeroXML.parentElement;
         let actesArray: Acte[] = await this.actesService.getAll();
+        if (actesArray === null){
+            return Promise.reject("Erreur serveur (actes)");
+        }
 
         let visitesXML: Element[] =  <Array<Element>> Array.from( patientXML.getElementsByTagName("visite"));
 
@@ -189,7 +216,7 @@ export class CabinetMedicalService {
             };
         });
 
-        return {
+        return Promise.resolve({
             prenom  : patientXML.querySelector("prénom").textContent,
             nom     : patientXML.querySelector("nom").textContent,
             sexe    : sexeEnum[patientXML.querySelector("sexe").textContent],
@@ -197,7 +224,7 @@ export class CabinetMedicalService {
             naissance: patientXML.querySelector("naissance").textContent,
             adresse : this.parseAdresse(<any>patientXML),
             visites : visiteArray
-        };
+        });
     }
 
     private parseAdresse(document:Document):Adresse {

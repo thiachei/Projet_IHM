@@ -19,10 +19,11 @@ export class Page_patientComponent implements OnInit{
     infirmiers: InfirmierInterface[];
     patients: PatientInterface[];
     cePatient ;
-    cePatientTemp:PatientInterface;
+    cePatientTemp;
     toutesPersonnes: Promise<{ infirmiers: InfirmierInterface[]; patient: PatientInterface}>;
     edit: boolean;
     myGenreEnum;
+    genreSelected: string;
 
     constructor(private cabinetMedicalService:CabinetMedicalService, private route: ActivatedRoute, private router: Router, private tileService: TileService, private actesService:ActesService){
         this.numeroSS = "";
@@ -34,22 +35,21 @@ export class Page_patientComponent implements OnInit{
     ngOnInit(){
         this.route.paramMap.subscribe(params => {
             this.numeroSS = params.get("id");
-            this.toutesPersonnes = this.cabinetMedicalService.getPatient(this.numeroSS);
-            this.toutesPersonnes.then(data => {
-                //console.log(data);
-                this.infirmiers = data.infirmiers;
-                this.cePatient = data.patient;
-                this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
-                this.cePatient.visites.map(uneVisite => uneVisite.show = false);
+            this.cabinetMedicalService.getPatient(this.numeroSS).then(
+                (data) => {
+                    this.infirmiers = data.infirmiers;
+                    this.cePatient = data.patient;
 
-                if (this.cePatient === undefined){
+                    this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
+                    this.genreSelected= this.cePatientTemp.sexe.id;
+                    this.cePatient.visites.map(uneVisite => uneVisite.show = false);
+                },
+                error =>{
+
                     this.router.navigate(['']).then( resp =>{
-                        this.tileService.setTile({style: "tile-style-2",content: "Patient non trouvé"});
+                        this.tileService.setTile({style: "tile-style-3",content: "Patient non trouvé"});
                     });
-                }
-
-
-            });
+                });
         });
     }
 
@@ -63,10 +63,13 @@ export class Page_patientComponent implements OnInit{
                 console.log("cePatientTemp");
                 console.log(this.cePatientTemp);
                 //this.cePatient = this.cePatientTemp;
+                if( this.genreSelected ){
+                    this.cePatientTemp.sexe = this.myGenreEnum[this.genreSelected];
+                }
                 this.cePatient = JSON.parse(JSON.stringify(this.cePatientTemp));
-                //this.tileService.showTile(  document.getElementById("tile"),{content:"Patient modifié avec succes",style:"tile-style-1"});
+                this.tileService.showTile(  document.getElementById("tile"),{content:"Patient modifié avec succes",style:"tile-style-1"});
             } else {
-                //todo show tile
+                this.tileService.showTile(  document.getElementById("tile"),{content:"Echec de la modification",style:"tile-style-3"});
                 this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
             }
         });
@@ -75,6 +78,7 @@ export class Page_patientComponent implements OnInit{
     cancelUpdate() {
         this.edit = false;
         this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
-        //todo: tile
+        this.genreSelected = this.cePatientTemp.sexe.id
+        this.tileService.showTile(  document.getElementById("tile"),{content:"Patient pas mis à jour",style:"tile-style-2"});
     }
 }

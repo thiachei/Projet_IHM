@@ -12,8 +12,8 @@
             <input type="button" value="Save" *ngIf="edit" (click)="updatePatient()">
             <p>Genre:
                 <span *ngIf="!edit">{{cePatient.sexe.value}}</span>
-                <select *ngIf="edit" title="Genre" [(ngModel)]="cePatientTemp.genreSelected">
-                    <option *ngFor="let unGenre of myGenreEnum" [selected]="unGenre.id == cePatient.sexe.id" value="{{unGenre.id}}">{{unGenre.value}}</option>
+                <select *ngIf="edit" title="Genre" [(ngModel)]="genreSelected" >
+                    <option *ngFor="let unGenre of myGenreEnum" value="{{unGenre.id}}">{{unGenre.value}}</option>
                 </select>
             </p>
             <p>Adresse:
@@ -26,7 +26,7 @@
             </p>
             <p>Date de naissance :
                 <span *ngIf="!edit">{{cePatient.naissance}}</span>
-                <input *ngIf="edit" title="Date de naissance: JJ-MM-AAAA" [(ngModel)]="cePatientTemp.naissance"/>
+                <input *ngIf="edit" title="Date de naissance: AAAA-MM-JJ" [(ngModel)]="cePatientTemp.naissance"/>
             </p>
             <p>Numero de sécutité Social :
                 <span *ngIf="!edit">{{cePatient.numeroSecuriteSociale}}</span>

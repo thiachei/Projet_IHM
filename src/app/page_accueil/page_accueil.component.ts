@@ -21,14 +21,11 @@ export class Page_accueilComponent implements OnInit{
 
     constructor(private cabinetMedicalService:CabinetMedicalService, private tileService:TileService, private constantsService:ConstantsService){
         //init attributs avec cabinetMedical
-        let all = cabinetMedicalService.getAll();
-        all.then(data => {
-            //console.log(data);
+        cabinetMedicalService.getAll().then(data => {
             this.infirmiers = data.infirmiers;
             this.patients = data.patients;
             constantsService.hospitalName = data.nom;
             constantsService.hospitalAddress = data.adresse["toString"];
-
 
             let tempInfirmiers = this.infirmiers.map(unInfirmier=> {
                 unInfirmier["status"] = 'Infirmier';
@@ -43,6 +40,8 @@ export class Page_accueilComponent implements OnInit{
             this.contenuTableEntier = tempInfirmiers.concat(<any[]>tempPatients);
             this.contenuTableEntier.sort((a,b) => a.prenom.localeCompare(b.prenom));
             this.contenuTable = this.contenuTableEntier;
+        }, error => {
+            this.tileService.showTile(document.getElementById("tile"),{content:error, style:"tile-style-3"});
         });
     }
 
