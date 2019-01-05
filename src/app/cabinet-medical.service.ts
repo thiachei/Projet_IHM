@@ -130,6 +130,7 @@ export class CabinetMedicalService {
             patientStreetNumber:numeroBatiment,
             patientFloor:etage
         };
+        //console.log(myBody);
         let response = await this.http.post(this.serverUrl_addPatient, myBody, {observe: 'response', responseType: 'text'}).toPromise();
 
         if (response.status ===200 ){
@@ -142,8 +143,8 @@ export class CabinetMedicalService {
     }
 
     async setPatient(patient:PatientInterface){
-        console.log("setPatient");
-        console.log(patient);
+        //console.log("setPatient");
+        //console.log(patient);
 
         return await this.setPatientAlt(patient.nom, patient.prenom, patient.sexe.id, patient.naissance, patient.numeroSecuriteSociale,
             patient.adresse.rue, patient.adresse.numero, patient.adresse.ville, patient.adresse.codePostal, patient.adresse.etage);

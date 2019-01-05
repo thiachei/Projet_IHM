@@ -56,19 +56,22 @@ export class Page_patientComponent implements OnInit{
     updatePatient() {
 
         this.edit = false;
+        if( this.genreSelected ){
+            this.cePatientTemp.sexe = this.myGenreEnum[this.genreSelected];
+        }
+        this.cePatientTemp.adresse.toString = "".concat(
+            this.cePatientTemp.adresse.numero," ",
+            this.cePatientTemp.adresse.rue,
+            this.cePatientTemp.adresse.etage.localeCompare("NC")!==0?" (étage "+this.cePatientTemp.adresse.etage+"), ":", ",
+            this.cePatientTemp.adresse.codePostal.toString()," ",
+            this.cePatientTemp.adresse.ville);
+
         this.cabinetMedicalService.setPatient(this.cePatientTemp).then(success => {
-            console.log("then");
-            console.log(success);
             if (success) {
-                console.log("cePatientTemp");
-                console.log(this.cePatientTemp);
-                //this.cePatient = this.cePatientTemp;
-                if( this.genreSelected ){
-                    this.cePatientTemp.sexe = this.myGenreEnum[this.genreSelected];
-                }
                 this.cePatient = JSON.parse(JSON.stringify(this.cePatientTemp));
+                //this.cePatient = this.cePatientTemp;Patient = JSON.parse(JSON.stringify(this.cePatientTemp));
                 this.tileService.showTile(  document.getElementById("tile"),{content:"Patient modifié avec succes",style:"tile-style-1"});
-            } else {
+            } else {//error
                 this.tileService.showTile(  document.getElementById("tile"),{content:"Echec de la modification",style:"tile-style-3"});
                 this.cePatientTemp = JSON.parse(JSON.stringify(this.cePatient));
             }
