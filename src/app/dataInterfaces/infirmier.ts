@@ -6,7 +6,7 @@ export interface InfirmierInterface {
  prenom: string;
  nom: string;
  photo: string;
- patients: PatientInterface[];
+ patientsAffectes: string[];
  adresse: Adresse;
 }
 

@@ -17,7 +17,7 @@ export class CabinetMedicalService {
     private cabinet: CabinetInterface;
     private serverUrl_cabinetInfirmier: string = "http://localhost:8090/data/cabinetInfirmier.xml?responseType=text";
     private serverUrl_addPatient: string = "http://localhost:8090/addPatient";
-    private responseObj: { infirmiers: InfirmierInterface[]; patient: PatientInterface};
+    private responseObj;//: { infirmiers: InfirmierInterface[]; patient: PatientInterface};
 
     constructor(private http: HttpClient, private actesService: ActesService) {
     }
@@ -83,7 +83,7 @@ export class CabinetMedicalService {
         })
     }
 
-     getPatient(numSS: string): Promise<any>{
+    getPatient(numSS: string): Promise<any>{
         this.responseObj = { infirmiers:<InfirmierInterface[]>[], patient: <PatientInterface>{}};
 
         return new Promise((resolve, reject) => {
@@ -104,6 +104,33 @@ export class CabinetMedicalService {
                             }
                         );
                         //resolve(this.responseObj);fmsjfohdfieqsgfiergfidsgqfdafuk it was doinbg here
+                    }else{
+                        console.log(res);
+                        reject("Erreur serveur");
+                    }
+                },
+                error => {
+                    console.error('Cannot reach the server', error);
+                    reject("Erreur server inateignable");
+
+                });
+        });
+    }
+
+    getInfirmier(id: string): Promise<any>{
+        this.responseObj = { infirmier:<InfirmierInterface>{}, patients: <PatientInterface[]>[]};
+
+        return new Promise((resolve, reject) => {
+            this.http.get(this.serverUrl_cabinetInfirmier, {observe: 'response', responseType: 'text'}).toPromise().then(
+                res => {
+                    //console.log("resolving promise");
+                    if(res.status === 200){
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(res.body, 'text/xml');
+                        //todo: should test if doc ok
+                        //this.responseObj.patients = this.parsePatients(doc);
+                        this.responseObj.infirmier = this.parseInfirmierFull(doc, id);
+                        resolve(this.responseObj);
                     }else{
                         console.log(res);
                         reject("Erreur serveur");
@@ -176,8 +203,6 @@ export class CabinetMedicalService {
             };
         }, {myInfirmiersArray: myInfirmiersArray, parseAdresse: this.parseAdresse});
         return myInfirmiersArray;
-
-
     }
 
     private parsePatients(document:Document):PatientInterface[]{
@@ -194,7 +219,7 @@ export class CabinetMedicalService {
         }) );
     }
 
-     async parsePatientsFull(document:Document, numSS: string){
+    async parsePatientsFull(document:Document, numSS: string){
         const numeroXML:Node = Array.from( document.querySelectorAll( "patients > patient > numéro" ) ).find(numeroXLM => numeroXLM.textContent.localeCompare(numSS) === 0); //transformer la NodeList en tableau pour le map
         //console.log(patientXML);
         if (numeroXML == undefined){
@@ -253,6 +278,54 @@ export class CabinetMedicalService {
         }
     }
 
+    private parseInfirmierFull(doc: Document, id: string) {
+        const infirmierXML =  <Element>( doc.querySelector( "infirmiers > infirmier[id='"+id+"']")); //transformer la NodeList en tableau pour le map
+        const patientsXML: Element[] =  <Array<Element>> Array.from( doc.querySelectorAll( "patients > patient" ) ); //transformer la NodeList en tableau pour le map
+        //console.log(patientXML);
+
+        let myInfirmier: InfirmierInterface = {
+            id      : id,
+            prenom  : infirmierXML.querySelector("prénom").textContent,
+            nom     : infirmierXML.querySelector("nom"   ).textContent,
+            photo   : infirmierXML.querySelector("photo" ).textContent,
+            adresse : this.parseAdresse(<any>infirmierXML),
+            patientsAffectes: []
+        };
+
+        this.responseObj.patients = patientsXML.map( unPatientXML => {
+            let patientId = unPatientXML.querySelector("numéro").textContent;
+
+            let visiteArray = (<Array<Element>> Array.from( unPatientXML.querySelectorAll("visite[intervenant='"+id+"']"))).map( visiteXML => {
+                if ( !myInfirmier.patientsAffectes.some( patientIdAlt => patientIdAlt.localeCompare(patientId)===0 ) ) {//si le patient n'est pas déjà affecté
+                    myInfirmier.patientsAffectes.push(patientId);
+                }
+                return {
+                    date  : visiteXML.getAttribute("date")? visiteXML.getAttribute("date"):"pas de date"
+                };
+            });
 
 
+            this.responseObj.patients[patientId] = {
+                prenom: unPatientXML.querySelector("prénom").textContent,
+                nom: unPatientXML.querySelector("nom").textContent,
+                sexe: sexeEnum[unPatientXML.querySelector("sexe").textContent],
+                numeroSecuriteSociale: patientId,
+                naissance: unPatientXML.querySelector("naissance").textContent,
+                adresse: this.parseAdresse(<any>unPatientXML),
+                visites: visiteArray
+            };
+
+            return {
+                prenom: unPatientXML.querySelector("prénom").textContent,
+                nom: unPatientXML.querySelector("nom").textContent,
+                sexe: sexeEnum[unPatientXML.querySelector("sexe").textContent],
+                numeroSecuriteSociale: patientId,
+                naissance: unPatientXML.querySelector("naissance").textContent,
+                adresse: this.parseAdresse(<any>unPatientXML),
+                visites: visiteArray
+            };
+        });
+
+        return myInfirmier;
+    }
 }

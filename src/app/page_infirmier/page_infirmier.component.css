@@ -1,0 +1,19 @@
+.img_profil{
+    position: relative;
+    display: inline-block;
+    width: 150px;
+    height: auto;
+}
+.info{
+    position: relative;
+    display: inline-block;
+    margin-left: 10px;
+}
+.infirmier_name {
+    display: block;
+    font-size: 1.7em;
+    font-weight: bold;
+}
+.infirmier_address {
+    display: block;
+}
