@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {InfirmierInterface} from "../dataInterfaces/infirmier";
 import {Adresse} from "../dataInterfaces/adresse";
 import {CabinetMedicalService} from "../services/cabinet-medical.service";
@@ -21,7 +21,7 @@ export class Page_infirmierComponent implements OnInit{
     idPatient: "";
     patientsArrayToShow: PatientInterface[];
 
-    constructor(private cabinetMedicalService:CabinetMedicalService, private route: ActivatedRoute, private affectationService:AffectationService, private tileService:TileService){
+    constructor(private cabinetMedicalService:CabinetMedicalService, private route: ActivatedRoute, private router: Router, private affectationService:AffectationService, private tileService:TileService){
         this.patientsArray = [];
         this.patientsArrayToShow = [];
         this.cetInfirmier = <InfirmierInterface>{
@@ -48,7 +48,9 @@ export class Page_infirmierComponent implements OnInit{
                     });
                 },
                 error => {
-                    console.log("error",error);
+                    this.router.navigate(['']).then( resp =>{
+                        this.tileService.setTile({style: "tile-style-3",content: error});
+                    });
                 }
             );
         });

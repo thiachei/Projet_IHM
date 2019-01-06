@@ -95,7 +95,7 @@ export class CabinetMedicalService {
                         //todo: should test if doc ok
                         //this.responseObj.patients = this.parsePatients(doc);
                         this.responseObj.infirmier = this.parseInfirmierFull(doc, id);
-                        resolve(this.responseObj);
+                        this.responseObj.infirmier?resolve(this.responseObj):reject("Infirmier pas trouvé");
                     }else{
                         console.log(res);
                         reject("Erreur serveur");
@@ -244,10 +244,12 @@ export class CabinetMedicalService {
     }
 
     private parseInfirmierFull(doc: Document, id: string) {
-        const infirmierXML =  <Element>( doc.querySelector( "infirmiers > infirmier[id='"+id+"']")); //transformer la NodeList en tableau pour le map
+        const infirmierXML =  <Element>( doc.querySelector( "infirmiers > infirmier[id='"+id+"']")); //
         const patientsXML: Element[] =  <Array<Element>> Array.from( doc.querySelectorAll( "patients > patient" ) ); //transformer la NodeList en tableau pour le map
         //console.log(patientXML);
-
+        if(!infirmierXML){
+            return null;
+        }
         let myInfirmier: InfirmierInterface = {
             id      : id,
             prenom  : infirmierXML.querySelector("prénom").textContent,
@@ -293,8 +295,6 @@ export class CabinetMedicalService {
                 visites: visiteArray
             });
         });
-
-
 
         return myInfirmier;
     }
