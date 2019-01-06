@@ -1,17 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
 import {HttpClientModule} from "@angular/common/http";
 import {RouterModule, Routes} from "@angular/router";
 import { FormsModule } from '@angular/forms';
 
 import { SecretaryComponent } from './secretary/secretary.component';
 import { Page_accueilComponent} from "./page_accueil/page_accueil.component";
-import {CabinetMedicalService} from "./services/cabinet-medical.service";
 import {Page_infirmierComponent} from "./page_infirmier/page_infirmier.component";
 import {Page_patientComponent} from "./page_patient/page_patient.component";
 import EntryComponent from "./entry/entry.component";
+
+import {CabinetMedicalService} from "./services/cabinet-medical.service";
 import {TileService} from "./services/tile.service";
 import {ActesService} from "./services/actes.service";
 import {ConstantsService} from "./services/constants.service";
@@ -35,7 +34,6 @@ const appRoutes: Routes = [
   ],
   imports: [
       BrowserModule,
-      AppRoutingModule,
       HttpClientModule,
       FormsModule,
       RouterModule.forRoot(appRoutes)
