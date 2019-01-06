@@ -2,6 +2,7 @@
     position: relative;
     display: inline-block;
     width: 150px;
+    max-height: 220px;
     height: auto;
 }
 .info{
@@ -16,4 +17,31 @@
 }
 .infirmier_address {
     display: block;
+}
+table {
+    text-align: center;
+    margin: auto;
+    border: 1px solid dimgrey ;
+}
+th{
+     background-color: grey;
+     padding: 8px;
+}
+td{
+      padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #cecece;
+}
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+tbody{
+    width: 100%;
+}
+tr:last-child{
+    border-top: 1px solid dimgrey;
+}
+button:hover{
+    cursor: pointer;
 }

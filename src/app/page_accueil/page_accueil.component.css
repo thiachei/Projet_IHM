@@ -38,7 +38,7 @@
     background-color: dimgrey !important;
 }
 #my-table tr:nth-child(even) {
-    background-color: #eee;
+    background-color: #cecece;
 }
 #my-table tr:nth-child(odd) {
     background-color: #fff;

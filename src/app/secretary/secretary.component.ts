@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {CabinetMedicalService} from '../cabinet-medical.service';
+import {CabinetMedicalService} from '../services/cabinet-medical.service';
 
 @Component({
   selector: 'app-secretary',

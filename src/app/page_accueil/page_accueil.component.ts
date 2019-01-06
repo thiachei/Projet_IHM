@@ -1,9 +1,9 @@
 import {AfterViewChecked, AfterViewInit, Component, Input, OnInit} from "@angular/core";
-import {CabinetMedicalService} from "../cabinet-medical.service";
+import {CabinetMedicalService} from "../services/cabinet-medical.service";
 import {InfirmierInterface} from "../dataInterfaces/infirmier";
 import {PatientInterface} from "../dataInterfaces/patient";
-import {TileService} from "../tile.service";
-import {ConstantsService} from "../constants.service";
+import {TileService} from "../services/tile.service";
+import {ConstantsService} from "../services/constants.service";
 
 @Component({
     selector: 'page-accueil',

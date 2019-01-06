@@ -21,3 +21,10 @@ CORS defini dans le serverCabinetMedical.ts
 Le parametre correspondant à la date de naissance dans la requette sur /addPatient n'est pas `patientBirthday ` mais `naissance` (
 et la requete ne retourne rien, on aurai attendu le nouvelle element enregistré)
 
+Dans le post sur affectation  j'ai rajouter un test sur l'existance du patient, car sinon en cas de patient non trouvé, le serveur ne répond plus
+
+J'ai changé le scode d'erreur retourné pour qu'il cole à la documentation et soit plus logique (400 "bad request" au lieu de 500 'server internal error")
+
+/affectation infirmier sans valeurs => status 200 ???
+
+il y a des remise à zero des visite de cabinet.WML intepestive

@@ -8,13 +8,14 @@ import { FormsModule } from '@angular/forms';
 
 import { SecretaryComponent } from './secretary/secretary.component';
 import { Page_accueilComponent} from "./page_accueil/page_accueil.component";
-import {CabinetMedicalService} from "./cabinet-medical.service";
+import {CabinetMedicalService} from "./services/cabinet-medical.service";
 import {Page_infirmierComponent} from "./page_infirmier/page_infirmier.component";
 import {Page_patientComponent} from "./page_patient/page_patient.component";
 import EntryComponent from "./entry/entry.component";
-import {TileService} from "./tile.service";
-import {ActesService} from "./actes.service";
-import {ConstantsService} from "./constants.service";
+import {TileService} from "./services/tile.service";
+import {ActesService} from "./services/actes.service";
+import {ConstantsService} from "./services/constants.service";
+import {AffectationService} from "./services/affectation.service";
 
 
 const appRoutes: Routes = [
@@ -39,7 +40,7 @@ const appRoutes: Routes = [
       FormsModule,
       RouterModule.forRoot(appRoutes)
   ],
-  providers: [CabinetMedicalService, ActesService, TileService, ConstantsService],
+  providers: [CabinetMedicalService, ActesService, TileService, ConstantsService, AffectationService],
   bootstrap: [EntryComponent ]
 })
 export class AppModule { }

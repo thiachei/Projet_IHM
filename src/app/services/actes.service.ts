@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {ActeTypes} from "./dataInterfaces/acteTypes";
-import {Acte} from "./dataInterfaces/acte";
+import {ActeTypes} from "../dataInterfaces/acteTypes";
+import {Acte} from "../dataInterfaces/acte";
 
 @Injectable()
 export class ActesService {

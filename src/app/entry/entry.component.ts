@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ConstantsService} from "../constants.service";
+import {ConstantsService} from "../services/constants.service";
 
 @Component({
     //moduleId:     module.id,

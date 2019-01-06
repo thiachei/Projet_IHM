@@ -1,13 +1,13 @@
-import { Adresse } from './dataInterfaces/adresse';
-import { InfirmierInterface } from './dataInterfaces/infirmier';
+import { Adresse } from '../dataInterfaces/adresse';
+import { InfirmierInterface } from '../dataInterfaces/infirmier';
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import { CabinetInterface } from './dataInterfaces/cabinet';
-import { PatientInterface } from './dataInterfaces/patient';
-import { sexeEnum } from './dataInterfaces/sexe';
+import { CabinetInterface } from '../dataInterfaces/cabinet';
+import { PatientInterface } from '../dataInterfaces/patient';
+import { sexeEnum } from '../dataInterfaces/sexe';
 import {ActesService} from "./actes.service";
-import {Acte} from "./dataInterfaces/acte";
-import {Visite} from "./dataInterfaces/visite";
+import {Acte} from "../dataInterfaces/acte";
+import {Visite} from "../dataInterfaces/visite";
 import {RequestOptions} from "@angular/http";
 
 @Injectable()
@@ -21,41 +21,6 @@ export class CabinetMedicalService {
 
     constructor(private http: HttpClient, private actesService: ActesService) {
     }
-
-    /*
-      async getCabinet(url: string): Promise<any> {
-        //get HTTP response as text
-        const response = await this.http.get(url, {responseType: 'text'}).toPromise();
-
-        //parse the response with DOMParser
-        let parser = new DOMParser();
-        let doc = parser.parseFromString(response, "application/xml");
-
-        //if no doc, exit
-        if (!doc) return null;
-
-        //default cabinet
-        const cabinet: CabinetInterface = {
-          infirmiers: [],
-          patientsNonAffectes: [],
-          adresse: this.getAdressFrom(doc.querySelector("cabinet"))
-        };
-
-        const infirmiersXML =  Array.from( doc.querySelectorAll( "infirmiers > infirmier" ) ); //transformer la NodeList en tableau pour le map
-
-        cabinet.infirmiers = infirmiersXML.map( I => ({
-          id      : I.getAttribute("id"),
-          prenom  : I.querySelector("prénom").textContent,
-          nom     : I.querySelector("nom"   ).textContent,
-          photo   : I.querySelector("photo" ).textContent,
-          adresse : this.getAdressFrom(I),
-          patients: []
-        }) );
-
-
-
-      }
-    */
 
     getAll():Promise<any>{
         let responseObj: CabinetInterface ={infirmiers: <InfirmierInterface[]>[], patients: <PatientInterface[]>[], adresse: <Adresse>{}, nom: ""};
@@ -292,10 +257,11 @@ export class CabinetMedicalService {
             patientsAffectes: []
         };
 
-        this.responseObj.patients = patientsXML.map( unPatientXML => {
+        patientsXML.forEach( unPatientXML => {
             let patientId = unPatientXML.querySelector("numéro").textContent;
 
             let visiteArray = (<Array<Element>> Array.from( unPatientXML.querySelectorAll("visite[intervenant='"+id+"']"))).map( visiteXML => {
+                //could use includes(patientId)
                 if ( !myInfirmier.patientsAffectes.some( patientIdAlt => patientIdAlt.localeCompare(patientId)===0 ) ) {//si le patient n'est pas déjà affecté
                     myInfirmier.patientsAffectes.push(patientId);
                 }
@@ -305,7 +271,7 @@ export class CabinetMedicalService {
             });
 
 
-            this.responseObj.patients[patientId] = {
+            this.responseObj.patients[""+patientId] = {
                 prenom: unPatientXML.querySelector("prénom").textContent,
                 nom: unPatientXML.querySelector("nom").textContent,
                 sexe: sexeEnum[unPatientXML.querySelector("sexe").textContent],
@@ -314,8 +280,10 @@ export class CabinetMedicalService {
                 adresse: this.parseAdresse(<any>unPatientXML),
                 visites: visiteArray
             };
+            //console.log(this.responseObj.patients);
 
-            return {
+            this.responseObj.patients.push(
+                {
                 prenom: unPatientXML.querySelector("prénom").textContent,
                 nom: unPatientXML.querySelector("nom").textContent,
                 sexe: sexeEnum[unPatientXML.querySelector("sexe").textContent],
@@ -323,8 +291,10 @@ export class CabinetMedicalService {
                 naissance: unPatientXML.querySelector("naissance").textContent,
                 adresse: this.parseAdresse(<any>unPatientXML),
                 visites: visiteArray
-            };
+            });
         });
+
+
 
         return myInfirmier;
     }

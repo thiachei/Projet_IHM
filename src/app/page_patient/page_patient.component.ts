@@ -1,11 +1,11 @@
 import {Component, EventEmitter, OnInit, Output} from "@angular/core";
-import {CabinetMedicalService} from "../cabinet-medical.service";
+import {CabinetMedicalService} from "../services/cabinet-medical.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {InfirmierInterface} from "../dataInterfaces/infirmier";
 import {PatientInterface} from "../dataInterfaces/patient";
 import {sexeEnum} from "../dataInterfaces/sexe";
-import {TileService} from "../tile.service";
-import {ActesService} from "../actes.service";
+import {TileService} from "../services/tile.service";
+import {ActesService} from "../services/actes.service";
 import {CabinetInterface} from "../dataInterfaces/cabinet";
 
 @Component({
