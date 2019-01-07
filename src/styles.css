@@ -62,3 +62,6 @@ body{
     opacity: 0;
     transition: visibility 0s 3s, opacity 1s 2s ease-in-out;
 }
+agm-map {
+    height: 400px;
+}

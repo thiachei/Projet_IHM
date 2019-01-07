@@ -15,6 +15,7 @@ import {TileService} from "./services/tile.service";
 import {ActesService} from "./services/actes.service";
 import {ConstantsService} from "./services/constants.service";
 import {AffectationService} from "./services/affectation.service";
+import {AgmCoreModule} from "@agm/core";
 
 
 const appRoutes: Routes = [
@@ -36,6 +37,9 @@ const appRoutes: Routes = [
       BrowserModule,
       HttpClientModule,
       FormsModule,
+      AgmCoreModule.forRoot({
+          apiKey: 'AIzaSyAqW1hwjAN3wlnU2eD0KVm4LUPzHmPmdBM'
+      }),
       RouterModule.forRoot(appRoutes)
   ],
   providers: [CabinetMedicalService, ActesService, TileService, ConstantsService, AffectationService],

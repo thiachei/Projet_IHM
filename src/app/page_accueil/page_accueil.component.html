@@ -27,7 +27,29 @@
         </table>
     </div>
     <div id="ajouter-patient" class="col-sm-12 col-md-6">
-<!-- ICI TU AJOUTE LE FORMULAIRE -->
+        <br/>
+        <!-- ICI TU AJOUTE LE FORMULAIRE -->
+        Prénom: <input type="text" title="Prénom" [(ngModel)]="newPatientTemp.prenom"/>
+        Nom: <input type="text" title="Nom" [(ngModel)]="newPatientTemp.nom"/>
+        <p>Genre:
+            <select title="Genre" [(ngModel)]="genreSelected" >
+                <option *ngFor="let unGenre of myGenreEnum" value="{{unGenre.id}}">{{unGenre.value}}</option>
+            </select>
+        </p>
+        <p>Adresse:
+            <input title="Numéro" placeholder="5" [(ngModel)]="newPatientTemp.adresse.numero"/>
+            <input title="Rue" placeholder="impasse des vignes" [(ngModel)]="newPatientTemp.adresse.rue"/>
+            <input title="Etage (NC si pas d'étage)" placeholder="étage" [(ngModel)]="newPatientTemp.adresse.etage"/>
+            <input title="Code Postal" placeholder="42740" [(ngModel)]="newPatientTemp.adresse.codePostal"/>
+            <input title="Ville" placeholder="Saint Paul en Jarez" [(ngModel)]="newPatientTemp.adresse.ville"/>
+        </p>
+        <p>Date de naissance :
+            <input title="Date de naissance: AAAA-MM-JJ" placeholder="1996-30-04" [(ngModel)]="newPatientTemp.naissance"/>
+        </p>
+        <p>Numero de sécutité Social :
+            <input title="Numéro de Sécurité Social" pattern="/^[1-2][0-9]{2}[0-1][0-9][[2A-B]*][[[0-9]]*]{2}[0-9]{3}[0-9]{3}[0-9]{2}$/" placeholder="1960442477512542" [(ngModel)]="newPatientTemp.numeroSecuriteSociale" />
+        </p>
+        <input type="button" value="Save" (click)="createPatient()">
     </div>
 </div>
 <div id="tile" class="fade-out"></div>

@@ -1,63 +1,65 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-12">
-            <h2>
-                <span *ngIf="!edit">{{cePatient.prenom}}</span> 
-                <input *ngIf="edit" type="text" title="Prénom" [(ngModel)]="cePatientTemp.prenom"/>
-                <span *ngIf="!edit">{{cePatient.nom}}</span>
-                <input *ngIf="edit" type="text" title="Nom" [(ngModel)]="cePatientTemp.nom"/>
-            </h2>
-            <input type="button" value="Edit" *ngIf="!edit" (click)="edit = true">
-            <input type="button" value="Cancel" *ngIf="edit" (click)="cancelUpdate()">
-            <input type="button" value="Save" *ngIf="edit" (click)="updatePatient()">
-            <p>Genre:
-                <span *ngIf="!edit">{{cePatient.sexe.value}}</span>
-                <select *ngIf="edit" title="Genre" [(ngModel)]="genreSelected" >
-                    <option *ngFor="let unGenre of myGenreEnum" value="{{unGenre.id}}">{{unGenre.value}}</option>
-                </select>
-            </p>
-            <p>Adresse:
-                <span *ngIf="!edit">{{cePatient.adresse.toString}}</span>
-                <input *ngIf="edit" title="Numéro" [(ngModel)]="cePatientTemp.adresse.numero"/>
-                <input *ngIf="edit" title="Rue" [(ngModel)]="cePatientTemp.adresse.rue"/>
-                <input *ngIf="edit" title="Etage (NC si pas d'étage)" [(ngModel)]="cePatientTemp.adresse.etage"/>
-                <input *ngIf="edit" title="Code Postal" [(ngModel)]="cePatientTemp.adresse.codePostal"/>
-                <input *ngIf="edit" title="Ville" [(ngModel)]="cePatientTemp.adresse.ville"/>
-            </p>
-            <p>Date de naissance :
-                <span *ngIf="!edit">{{cePatient.naissance}}</span>
-                <input *ngIf="edit" title="Date de naissance: AAAA-MM-JJ" [(ngModel)]="cePatientTemp.naissance"/>
-            </p>
-            <p>Numero de sécutité Social :
-                <span *ngIf="!edit">{{cePatient.numeroSecuriteSociale}}</span>
-                <input *ngIf="edit" title="Numéro de Sécurité Social" value="{{cePatient.numeroSecuriteSociale}}" disabled/>
-            </p>
+<div class="container-fluid row">
+    <div class="col-xs-12 col-md-6">
+        <div class="row">
+            <div class="col-xs-12">
+                <h2>
+                    <span *ngIf="!edit">{{cePatient.prenom}}</span> 
+                    <input *ngIf="edit" type="text" title="Prénom" [(ngModel)]="cePatientTemp.prenom"/>
+                    <span *ngIf="!edit">{{cePatient.nom}}</span>
+                    <input *ngIf="edit" type="text" title="Nom" [(ngModel)]="cePatientTemp.nom"/>
+                </h2>
+                <input type="button" value="Edit" *ngIf="!edit" (click)="edit = true">
+                <input type="button" value="Cancel" *ngIf="edit" (click)="cancelUpdate()">
+                <input type="button" value="Save" *ngIf="edit" (click)="updatePatient()">
+                <p>Genre:
+                    <span *ngIf="!edit">{{cePatient.sexe.value}}</span>
+                    <select *ngIf="edit" title="Genre" [(ngModel)]="genreSelected" >
+                        <option *ngFor="let unGenre of myGenreEnum" value="{{unGenre.id}}">{{unGenre.value}}</option>
+                    </select>
+                </p>
+                <p>Adresse:
+                    <span *ngIf="!edit">{{cePatient.adresse.toString}}</span>
+                    <input *ngIf="edit" title="Numéro" [(ngModel)]="cePatientTemp.adresse.numero"/>
+                    <input *ngIf="edit" title="Rue" [(ngModel)]="cePatientTemp.adresse.rue"/>
+                    <input *ngIf="edit" title="Etage (NC si pas d'étage)" [(ngModel)]="cePatientTemp.adresse.etage"/>
+                    <input *ngIf="edit" title="Code Postal" [(ngModel)]="cePatientTemp.adresse.codePostal"/>
+                    <input *ngIf="edit" title="Ville" [(ngModel)]="cePatientTemp.adresse.ville"/>
+                </p>
+                <p>Date de naissance :
+                    <span *ngIf="!edit">{{cePatient.naissance}}</span>
+                    <input *ngIf="edit" title="Date de naissance: AAAA-MM-JJ" [(ngModel)]="cePatientTemp.naissance"/>
+                </p>
+                <p>Numero de sécutité Social :
+                    <span *ngIf="!edit">{{cePatient.numeroSecuriteSociale}}</span>
+                    <input *ngIf="edit" title="Numéro de Sécurité Social" value="{{cePatient.numeroSecuriteSociale}}" disabled/>
+                </p>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12 col-md-6 visites_div">
-            <div class="row visites_title">Vos visites</div>
-            <div class="row table_div">
-                <div class="col-12">
-                    <div class="row table_header">
-                        <div class="col-4 ">Date</div>
-                        <div class="col-8 ">Intervenant</div>
-                    </div>
-                </div>
-                <div class="row" *ngIf="cePatient.visites.length==0">Pas de visites</div>
-                <div class="col-12  visite_desc" *ngFor="let uneVisite of cePatient.visites" >
-                    <div class="row" (click)="uneVisite.show = !uneVisite.show">
-                        <div class="col-12" >
-                            <div class="row visite_row" [ngClass]="{'clicked':uneVisite.show}" >
-                                <div class="col-4 ">{{uneVisite.date}}</div>
-                                <div class="col-8 ">{{uneVisite.intervenant.prenom}} {{uneVisite.intervenant.nom}}</div>
-                            </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6 visites_div">
+                <div class="row visites_title">Vos visites</div>
+                <div class="row table_div">
+                    <div class="col-12">
+                        <div class="row table_header">
+                            <div class="col-4 ">Date</div>
+                            <div class="col-8 ">Intervenant</div>
                         </div>
-                        <div class="col-12" *ngIf="uneVisite.show" >
-                            <div class="row ">
-                                <div class="col-12" *ngIf="uneVisite.actes.length==0">Pas de visites</div>
-                                <div class="col-12 acte" *ngFor="let unActe of uneVisite.actes" title="{{unActe.type.text}}">
-                                    {{unActe.text}}
+                    </div>
+                    <div class="row" *ngIf="cePatient.visites.length==0">Pas de visites</div>
+                    <div class="col-12  visite_desc" *ngFor="let uneVisite of cePatient.visites" >
+                        <div class="row" (click)="uneVisite.show = !uneVisite.show">
+                            <div class="col-12" >
+                                <div class="row visite_row" [ngClass]="{'clicked':uneVisite.show}" >
+                                    <div class="col-4 ">{{uneVisite.date}}</div>
+                                    <div class="col-8 ">{{uneVisite.intervenant.prenom}} {{uneVisite.intervenant.nom}}</div>
+                                </div>
+                            </div>
+                            <div class="col-12" *ngIf="uneVisite.show" >
+                                <div class="row ">
+                                    <div class="col-12" *ngIf="uneVisite.actes.length==0">Pas de visites</div>
+                                    <div class="col-12 acte" *ngFor="let unActe of uneVisite.actes" title="{{unActe.type.text}}">
+                                        {{unActe.text}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -65,6 +67,13 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-xs-12 col-md-6">
+        <br/>
+        <agm-map class="my_map" [latitude]="(initPos.lat)" [longitude]="(initPos.lng)" [zoom]="11" >
+            <agm-marker *ngFor="let resto of results"  [latitude]="initPos.lat" [longitude]="initPos.lng">
+            </agm-marker>
+        </agm-map>
     </div>
 </div>
 <div id="tile" class="fade-out"></div>

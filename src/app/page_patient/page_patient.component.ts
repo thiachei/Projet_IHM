@@ -24,12 +24,21 @@ export class Page_patientComponent implements OnInit{
     edit: boolean;
     myGenreEnum;
     genreSelected: string;
+    private initPos: { lng: number; lat: number; restoId: number };
 
     constructor(private cabinetMedicalService:CabinetMedicalService, private route: ActivatedRoute, private router: Router, private tileService: TileService, private actesService:ActesService){
         this.numeroSS = "";
         this.myGenreEnum = sexeEnum;
         this.edit = false;
         this.cePatient = {nom:"",prenom:"",sexe:sexeEnum['A'],numeroSecuriteSociale:"",adresse:{codePostal:0,etage:"",numero:"",rue:"",ville:"",toString:" Pas d'adresse"},naissance:"",visites:[]};
+
+        this.initPos = {lng:0,lat:0,restoId:0};
+        if(window.navigator.geolocation){
+            window.navigator.geolocation.getCurrentPosition((pos)=> {
+                this.initPos.lat = pos.coords.latitude;
+                this.initPos.lng = pos.coords.longitude;
+            });
+        }
     }
 
     ngOnInit(){
